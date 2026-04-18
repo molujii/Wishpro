@@ -6,6 +6,9 @@ const LABELS: Record<Status, string> = {
   idle:         'Ready',
   listening:    'Listening...',
   transcribing: 'Transcribing...',
+  polishing:    'Polishing...',
+  completed:    'Done',
+  error:        'Error',
 };
 
 interface StatusTextProps {
