@@ -9,9 +9,11 @@ function renderWithContext(listening: boolean, onMicDown = jest.fn(), onMicUp = 
       listening,
       status: 'idle',
       mode: 'conversation',
+      lastTranscript: null,
       setListening: jest.fn(),
       setStatus: jest.fn(),
       setMode: jest.fn(),
+      syncFromBackend: jest.fn(),
     }}>
       <MicButton onMicDown={onMicDown} onMicUp={onMicUp} />
     </AppContext.Provider>
