@@ -123,12 +123,12 @@ export function resetAppState(): void   // resets to initial defaults — used i
 
 ```ts
 const VALID_TRANSITIONS: Record<AppStatus, AppStatus[]> = {
-  idle:         ['listening'],
+  idle:         ['listening',    'error'],
   listening:    ['transcribing', 'error'],
   transcribing: ['polishing',    'error'],
   polishing:    ['completed',    'error'],
-  completed:    ['idle'],
-  error:        ['idle'],
+  completed:    ['idle',         'error'],
+  error:        ['idle',         'error'],
 };
 
 export function canTransition(from: AppStatus, to: AppStatus): boolean
@@ -221,6 +221,7 @@ export class PipelineService {
   // on any error → handleError()
 
   async retryLastRun(): Promise<void>
+  // completed → idle → listening → transcribing → polishing → completed
   // re-polishes lastTranscript with current mode; noop if null
 
   async cancelCurrentRun(): Promise<void>
@@ -253,7 +254,11 @@ export class TranscriptionController {
 **`app/main/controllers/appStateController.ts`**
 ```ts
 export class AppStateController {
-  constructor(private getState: () => Readonly<AppStateShape>, private pipeline: PipelineService) {}
+  constructor(
+    private getState: () => Readonly<AppStateShape>,
+    private patchState: (p: Partial<AppStateShape>) => void,
+    private pipeline: PipelineService,
+  ) {}
   onGetAppState(_event: IpcMainInvokeEvent): AppStateSnapshot
   onModeChange(_event: IpcMainEvent, payload: ModeChangePayload): void
   onCancelCurrentRun(_event: IpcMainEvent): void
@@ -320,8 +325,7 @@ Import channel names from `../ipc/channels` (same `rootDir` tree, no module alia
 ```ts
 app.whenReady().then(() => {
   mainWindow = createMainWindow();
-
-  const emit      = (ch: string, p: unknown) => mainWindow?.webContents.send(ch, p);
+  const emit      = (ch: string, p: unknown): void => { mainWindow?.webContents.send(ch, p); };
   const logger    = new Logger(emit);
   const pipeline  = new PipelineService({
     speechService: new MockSpeechService(),
@@ -331,11 +335,12 @@ app.whenReady().then(() => {
     patchState: patchAppState,
   });
   const txCtrl    = new TranscriptionController(pipeline);
-  const stateCtrl = new AppStateController(getAppState, pipeline);
+  const stateCtrl = new AppStateController(getAppState, patchAppState, pipeline);
   const hotkey    = new HotkeyService();
 
   registerIpcHandlers(txCtrl, stateCtrl);
   hotkey.register(() => mainWindow?.webContents.send('hotkey-pressed'));
+  logger.info('App initialized');
 });
 
 app.on('will-quit',          () => hotkey.unregister());
@@ -346,7 +351,7 @@ app.on('window-all-closed',  () => { if (process.platform !== 'darwin') app.quit
 
 ## Tests
 
-All test files go under `app/main/__tests__/` (already in Jest's `roots` for the `main` project).
+All test files live under `app/main/__tests__/` (in Jest's `roots` for the `main` project).
 
 ### `stateMachine.test.ts`
 - All valid transitions pass `canTransition`
@@ -358,6 +363,7 @@ All test files go under `app/main/__tests__/` (already in Jest's `roots` for the
 - Initial state shape is correct
 - `patchAppState` updates only specified fields
 - `resetAppState()` reverts to defaults (test isolation)
+- `getAppState()` returns a shallow copy — mutations don't affect internal state
 
 ### `pipelineService.test.ts` (most critical)
 - `startPipeline` transitions `idle → listening`, calls `speechService.startCapture`, emits status-change
@@ -396,8 +402,7 @@ Add labels: `polishing: 'Polishing...'`, `completed: 'Done'`, `error: 'Error'`
 Wire new listeners in `useEffect`:
 ```ts
 window.electronAPI?.onStatusChange(({ status }) => setStatus(status));
-window.electronAPI?.onTranscriptReady(payload => setLastTranscript(payload));
-window.electronAPI?.onBackendError(({ message }) => { /* show error */ });
+window.electronAPI?.onBackendError(({ message }) => setStatus('error'));
 window.electronAPI?.getAppState().then(snapshot => syncFromBackend(snapshot));
 ```
 
@@ -406,10 +411,10 @@ window.electronAPI?.getAppState().then(snapshot => syncFromBackend(snapshot));
 ## Design Decisions
 
 - **`index.ts` kept as entry filename** — `package.json#main` is `dist/main/index.js`; renaming is unnecessary churn.
-- **AppState as module singleton** — main process is single-instance; a plain mutable object with `resetAppState()` is simpler than a class and fully testable.
+- **AppState as module singleton** — main process is single-instance; a plain mutable object with `resetAppState()` is simpler than a class and fully testable. `getAppState()` returns a shallow copy to prevent accidental external mutation.
 - **PipelineService is fully dependency-injected** — no direct Electron imports; unit-testable without running Electron.
 - **Mock services co-located with interfaces** — Module 3/4 authors immediately see the contract to satisfy.
-- **`completed` does not auto-advance to `idle`** — avoids timing-based state resets; a new `mic-start` or explicit action triggers the transition.
+- **`completed` does not auto-advance to `idle`** — avoids timing-based state resets; a new `mic-start` or explicit retry action triggers the transition.
 
 ---
 
@@ -419,13 +424,16 @@ window.electronAPI?.getAppState().then(snapshot => syncFromBackend(snapshot));
 # 1. Type-check main process
 npx tsc -p tsconfig.main.json --noEmit      # expect: 0 errors
 
-# 2. Unit tests
-npm test                                     # expect: all main + renderer tests pass
+# 2. Type-check renderer
+npx tsc -p app/renderer/tsconfig.json --noEmit  # expect: 0 errors
 
-# 3. Lint
+# 3. Unit tests
+npm test                                     # expect: 78 tests pass across 8 suites
+
+# 4. Lint
 npm run lint                                 # expect: 0 errors
 
-# 4. Dev mode end-to-end smoke test
+# 5. Dev mode end-to-end smoke test
 npm run dev
 # ✓ Electron opens overlay
 # ✓ Press mic button → terminal: [INFO] idle → listening, status-change emitted
@@ -443,7 +451,8 @@ npm run dev
 | File | Action |
 |---|---|
 | `app/main/index.ts` | MODIFY — thin bootstrap |
-| `app/main/preload.ts` | MOVE → `app/main/preload/index.ts` + extend |
+| `app/main/preload.ts` | DELETE (moved to preload/index.ts) |
+| `app/main/preload/index.ts` | CREATE (moved + extended with 7 new methods) |
 | `app/main/types/status.ts` | CREATE |
 | `app/main/types/mode.ts` | CREATE |
 | `app/main/types/transcript.ts` | CREATE |
