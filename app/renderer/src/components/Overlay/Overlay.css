@@ -1,0 +1,94 @@
+.overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  background: var(--color-surface);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay__drag-handle {
+  height: 6px;
+  -webkit-app-region: drag;
+  cursor: grab;
+}
+
+.overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  -webkit-app-region: drag;
+}
+
+/* Tabs and wordmark must not be draggable */
+.overlay__wordmark,
+.overlay__tabs {
+  -webkit-app-region: no-drag;
+}
+
+.overlay__wordmark {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-text-primary);
+}
+
+.overlay__tabs {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.overlay__tab {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+.overlay__tab:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.overlay__tab[data-active="true"] {
+  color: var(--color-accent);
+  background: var(--color-accent-glow);
+}
+
+.overlay__body {
+  padding: var(--space-6) var(--space-4);
+  flex: 1;
+}
+
+.overlay__mic-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Shared placeholder pane styles */
+.placeholder-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}

@@ -1,0 +1,27 @@
+.status-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--duration-fast) ease,
+    transform var(--duration-normal) var(--ease-spring),
+    color var(--duration-normal) ease;
+}
+
+.status-text[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-text[data-status="listening"] {
+  color: var(--color-listening);
+}
+
+.status-text[data-status="transcribing"] {
+  color: var(--color-accent);
+}

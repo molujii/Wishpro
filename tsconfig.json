@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020", "DOM"],
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@modules/speech": ["modules/speech/src/index.ts"],
+      "@modules/text": ["modules/text/src/index.ts"],
+      "@modules/db": ["modules/db/src/index.ts"],
+      "@modules/auth": ["modules/auth/src/index.ts"]
+    }
+  },
+  "include": ["modules/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
