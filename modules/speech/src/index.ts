@@ -1,11 +1,14 @@
-export interface TranscriptionResult {
-  text: string;
-  language: string;
-  durationMs: number;
-}
+export type {
+  SpeechProviderName,
+  SpeechRequest,
+  SpeechRawTranscript,
+  SpeechErrorCode,
+  SpeechError,
+  SpeechProvider,
+} from './types';
 
-export interface SpeechEngine {
-  transcribe(audioBuffer: Buffer): Promise<TranscriptionResult>;
-}
-
-export { WhisperEngine } from './whisperEngine';
+export { isSpeechError } from './types';
+export { SpeechModuleService } from './speechService';
+export { MockSpeechProvider } from './providers/mockSpeechProvider';
+export { WhisperAdapter } from './providers/whisperAdapter';
+export { validateSpeechRequest } from './validation';
