@@ -9,12 +9,14 @@ import { TranscriptionController } from './controllers/transcriptionController';
 import { AppStateController } from './controllers/appStateController';
 import { registerIpcHandlers } from './ipc/registerIpcHandlers';
 import { getAppState, patchAppState } from './state/appState';
+import { initAutoUpdater, checkForUpdates } from './services/autoUpdaterService';
 
 let mainWindow: BrowserWindow | null = null;
 let hotkeyService: HotkeyService | null = null;
 
 app.whenReady().then(() => {
   mainWindow = createMainWindow();
+  initAutoUpdater(mainWindow);
 
   const emit = (channel: string, payload: unknown): void => {
     mainWindow?.webContents.send(channel, payload);
@@ -37,6 +39,9 @@ app.whenReady().then(() => {
 
   hotkeyService = new HotkeyService();
   hotkeyService.register(() => mainWindow?.webContents.send('hotkey-pressed'));
+
+  // Check for updates 3 seconds after startup to avoid blocking launch
+  setTimeout(() => checkForUpdates(), 3000);
 
   logger.info('App initialized');
 });

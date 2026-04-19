@@ -5,6 +5,7 @@ import ModeSelector from '../ModeSelector/ModeSelector';
 import StatusText from '../StatusText/StatusText';
 import HistoryPane from '../HistoryPane/HistoryPane';
 import SettingsPane from '../SettingsPane/SettingsPane';
+import UpdateBanner from '../UpdateBanner/UpdateBanner';
 import './Overlay.css';
 
 type Tab = 'mic' | 'history' | 'settings';
@@ -68,6 +69,8 @@ export default function Overlay(): React.ReactElement {
         {activeTab === 'history'  && <HistoryPane />}
         {activeTab === 'settings' && <SettingsPane />}
       </div>
+
+      <UpdateBanner />
     </div>
   );
 }

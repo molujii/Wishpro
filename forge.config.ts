@@ -1,5 +1,6 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerDMG } from '@electron-forge/maker-dmg';
+import { PublisherGithub } from '@electron-forge/publisher-github';
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -30,6 +31,13 @@ const config: ForgeConfig = {
       name: 'WhispPro',
       icon: './assets/icons/icon.icns',
       format: 'ULFO',
+    }),
+  ],
+  publishers: [
+    new PublisherGithub({
+      repository: { owner: 'molujii', name: 'WishPro' },
+      prerelease: false,
+      draft: false,
     }),
   ],
 };
