@@ -3,7 +3,7 @@ import { RawTranscript, FinalTranscript } from '../types/transcript';
 import { AppMode } from '../types/mode';
 import { OllamaProvider } from '../../../modules/text/src/providers/ollamaProvider';
 import { TextModuleService } from '../../../modules/text/src/textService';
-import { EnhancementLevel } from '../../../modules/text/src/types';
+import type { EnhancementLevel } from '../../../modules/text/src/types';
 
 type ModeMap = Record<AppMode, 'conversation' | 'coding' | 'email' | 'custom'>;
 const MODE_MAP: ModeMap = {

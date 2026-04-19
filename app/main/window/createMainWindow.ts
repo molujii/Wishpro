@@ -17,10 +17,9 @@ export function createMainWindow(): BrowserWindow {
 
   if (app.isPackaged) {
     win.loadFile(path.join(process.resourcesPath, 'renderer/dist/index.html'));
-  } else if (process.env.NODE_ENV === 'development') {
-    win.loadURL('http://localhost:3000');
   } else {
-    win.loadFile(path.join(__dirname, '../../../app/renderer/dist/index.html'));
+    // In dev, always try the Vite dev server first
+    win.loadURL('http://localhost:3000');
   }
 
   return win;

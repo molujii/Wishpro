@@ -4,5 +4,5 @@
     "outDir": "./dist/main",
     "rootDir": "./"
   },
-  "include": ["app/main/**/*", "modules/**/*"]
+  "include": ["app/main/**/*", "modules/*/src/**/*"]
 }
