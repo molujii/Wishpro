@@ -9,6 +9,7 @@ import {
 } from './channels';
 import { TranscriptionController } from '../controllers/transcriptionController';
 import { AppStateController } from '../controllers/appStateController';
+import { registerUpdateHandlers } from './updateHandlers';
 
 export function registerIpcHandlers(
   txCtrl: TranscriptionController,
@@ -22,4 +23,6 @@ export function registerIpcHandlers(
 
   ipcMain.handle(IPC_GET_APP_STATE,  (e)    => stateCtrl.onGetAppState(e));
   ipcMain.handle('get-settings',     async () => ({})); // TODO Module 5: wire to db module
+
+  registerUpdateHandlers();
 }

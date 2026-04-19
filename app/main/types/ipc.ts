@@ -22,3 +22,19 @@ export interface AppStateSnapshot {
   pipelineActive: boolean;
   lastTranscript: TranscriptReadyPayload | null;
 }
+
+// Module 9: auto-updater
+export type UpdateStatusKind =
+  | 'checking'
+  | 'available'
+  | 'not-available'
+  | 'downloading'
+  | 'ready'
+  | 'error';
+
+export interface UpdateStatusPayload {
+  status: UpdateStatusKind;
+  version?: string;
+  percent?: number;
+  message?: string;
+}

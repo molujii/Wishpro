@@ -1,5 +1,20 @@
 export type AppMode = 'conversation' | 'coding' | 'custom';
 
+export type UpdateStatusKind =
+  | 'checking'
+  | 'available'
+  | 'not-available'
+  | 'downloading'
+  | 'ready'
+  | 'error';
+
+export type UpdateStatusPayload = {
+  status: UpdateStatusKind;
+  version?: string;
+  percent?: number;
+  message?: string;
+};
+
 export type AppStatus =
   | 'idle'
   | 'listening'
@@ -50,6 +65,11 @@ interface ElectronAPI {
   // --- Module 2: fire-and-forget ---
   retryLastRun:      () => void;
   cancelCurrentRun:  () => void;
+
+  // --- Module 9: auto-updater ---
+  checkForUpdate:  () => Promise<void>;
+  installUpdate:   () => Promise<void>;
+  onUpdateStatus:  (cb: (payload: UpdateStatusPayload) => void) => void;
 }
 
 declare global {

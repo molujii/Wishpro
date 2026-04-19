@@ -10,6 +10,9 @@ import {
   IPC_TRANSCRIPT_READY,
   IPC_ERROR,
   IPC_LOG_EVENT,
+  IPC_CHECK_FOR_UPDATE,
+  IPC_INSTALL_UPDATE,
+  IPC_UPDATE_STATUS,
 } from '../ipc/channels';
 import {
   StatusChangePayload,
@@ -55,4 +58,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // --- New: Module 2 fire-and-forget ---
   retryLastRun:     () => ipcRenderer.send(IPC_RETRY_LAST_RUN),
   cancelCurrentRun: () => ipcRenderer.send(IPC_CANCEL_CURRENT_RUN),
+
+  // --- Module 9: auto-updater ---
+  checkForUpdate: () => ipcRenderer.invoke(IPC_CHECK_FOR_UPDATE),
+  installUpdate:  () => ipcRenderer.invoke(IPC_INSTALL_UPDATE),
+  onUpdateStatus: (cb: (payload: import('../types/ipc').UpdateStatusPayload) => void) =>
+    ipcRenderer.on(IPC_UPDATE_STATUS, (_event, payload) => cb(payload)),
 });
