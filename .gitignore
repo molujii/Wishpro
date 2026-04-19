@@ -8,3 +8,7 @@ out/
 *.log
 .DS_Store
 assets/icons/icon.iconset/
+
+# Compiled module output (TypeScript emits these alongside src)
+modules/**/*.js
+modules/**/*.d.ts
