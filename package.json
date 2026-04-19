@@ -11,7 +11,12 @@
     "test": "jest",
     "lint": "eslint 'app/**/*.{ts,tsx}' 'modules/**/*.ts'"
   },
-  "keywords": ["electron", "whisper", "transcription", "voice"],
+  "keywords": [
+    "electron",
+    "whisper",
+    "transcription",
+    "voice"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
@@ -20,11 +25,11 @@
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",
+    "@types/better-sqlite3": "^7.6.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@types/better-sqlite3": "^7.6.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.0",
@@ -39,7 +44,7 @@
     "wait-on": "^7.0.0"
   },
   "dependencies": {
-    "better-sqlite3": "^9.0.0",
+    "better-sqlite3": "^12.9.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   }
