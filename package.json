@@ -1,13 +1,17 @@
 {
   "name": "whispro",
+  "productName": "WhispPro",
   "version": "0.1.0",
   "description": "Local voice transcription desktop app",
+  "author": "",
   "main": "dist/main/index.js",
   "scripts": {
     "dev": "concurrently \"tsc -p tsconfig.main.json --watch\" \"vite --config app/renderer/vite.config.ts\" \"wait-on http://localhost:3000 && electron .\"",
     "dev:renderer": "vite --config app/renderer/vite.config.ts",
     "build": "tsc -p tsconfig.main.json && vite build --config app/renderer/vite.config.ts",
-    "make": "npm run build && electron-forge package",
+    "package": "npm run build && electron-forge package",
+    "make": "npm run build && electron-forge make",
+    "icons": "bash scripts/generate-icons.sh",
     "test": "jest",
     "lint": "eslint 'app/**/*.{ts,tsx}' 'modules/**/*.ts'"
   },
@@ -17,11 +21,11 @@
     "transcription",
     "voice"
   ],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.0.0",
     "@electron-forge/maker-dmg": "^7.0.0",
+    "@electron-forge/shared-types": "^7.11.1",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",

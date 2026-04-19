@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
 export function createMainWindow(): BrowserWindow {
@@ -15,7 +15,9 @@ export function createMainWindow(): BrowserWindow {
     },
   });
 
-  if (process.env.NODE_ENV === 'development') {
+  if (app.isPackaged) {
+    win.loadFile(path.join(process.resourcesPath, 'renderer/dist/index.html'));
+  } else if (process.env.NODE_ENV === 'development') {
     win.loadURL('http://localhost:3000');
   } else {
     win.loadFile(path.join(__dirname, '../../../app/renderer/dist/index.html'));
