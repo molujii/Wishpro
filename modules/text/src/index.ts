@@ -1,10 +1,15 @@
-export interface PolishOptions {
-  mode: 'conversation' | 'coding' | 'email' | 'custom';
-  customPrompt?: string;
-}
-
-export interface TextEngine {
-  polish(rawText: string, options: PolishOptions): Promise<string>;
-}
-
-export { OllamaEngine } from './ollamaEngine';
+export type {
+  TextMode,
+  EnhancementLevel,
+  TextProviderName,
+  TextPolishRequest,
+  FinalTranscript,
+  TextErrorCode,
+  TextError,
+  TextProvider,
+} from './types';
+export { isTextError } from './types';
+export { TextModuleService } from './textService';
+export { MockTextProvider } from './providers/mockTextProvider';
+export { OllamaProvider } from './providers/ollamaProvider';
+export { buildPrompt, MODE_PROMPTS, ENHANCEMENT_PREFIX } from './prompts';
