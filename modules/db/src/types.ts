@@ -22,6 +22,11 @@ export interface SettingRecord {
 export type KnownSettingKey =
   | 'speech.provider'
   | 'speech.language'
+  | 'speech.model-path'
+  | 'speech.exec-path'
+  | 'text.provider'
+  | 'text.model'
+  | 'text.ollama-url'
   | 'text.mode'
   | 'text.enhancement'
   | 'ui.theme'

@@ -1,8 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import { createMainWindow } from './window/createMainWindow';
 import { HotkeyService } from './services/hotkeyService';
-import { MockSpeechService } from './services/speechService';
-import { MockTextService } from './services/textService';
 import { Logger } from './services/logger';
 import { PipelineService } from './services/pipelineService';
 import { TranscriptionController } from './controllers/transcriptionController';
@@ -10,11 +8,14 @@ import { AppStateController } from './controllers/appStateController';
 import { registerIpcHandlers } from './ipc/registerIpcHandlers';
 import { getAppState, patchAppState } from './state/appState';
 import { initAutoUpdater, checkForUpdates } from './services/autoUpdaterService';
+import { initDatabase, loadSettings, buildSpeechService, buildTextService } from './services/settingsService';
 
 let mainWindow: BrowserWindow | null = null;
 let hotkeyService: HotkeyService | null = null;
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  initDatabase();
+
   mainWindow = createMainWindow();
   initAutoUpdater(mainWindow);
 
@@ -22,10 +23,15 @@ app.whenReady().then(() => {
     mainWindow?.webContents.send(channel, payload);
   };
 
-  const logger    = new Logger(emit);
+  const logger = new Logger(emit);
+
+  const settings      = await loadSettings();
+  const speechService = buildSpeechService(settings);
+  const textService   = buildTextService(settings);
+
   const pipeline  = new PipelineService({
-    speechService: new MockSpeechService(),
-    textService:   new MockTextService(),
+    speechService,
+    textService,
     logger,
     emit,
     getState:   getAppState,

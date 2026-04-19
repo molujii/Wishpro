@@ -13,6 +13,8 @@ import {
   IPC_CHECK_FOR_UPDATE,
   IPC_INSTALL_UPDATE,
   IPC_UPDATE_STATUS,
+  IPC_GET_SETTINGS,
+  IPC_SAVE_SETTINGS,
 } from '../ipc/channels';
 import {
   StatusChangePayload,
@@ -29,8 +31,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // --- Existing API (Module 1) ---
   onHotkeyPressed: (cb: () => void) =>
     ipcRenderer.on('hotkey-pressed', (_event) => cb()),
-
-  getSettings: () => ipcRenderer.invoke('get-settings'),
 
   micStart: () => ipcRenderer.send(IPC_MIC_START),
   micStop:  () => ipcRenderer.send(IPC_MIC_STOP),
@@ -64,4 +64,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   installUpdate:  () => ipcRenderer.invoke(IPC_INSTALL_UPDATE),
   onUpdateStatus: (cb: (payload: import('../types/ipc').UpdateStatusPayload) => void) =>
     ipcRenderer.on(IPC_UPDATE_STATUS, (_event, payload) => cb(payload)),
+
+  // --- Module 6: settings ---
+  getSettings:  (): Promise<import('../services/settingsService').AppSettings> =>
+    ipcRenderer.invoke(IPC_GET_SETTINGS),
+  saveSettings: (patch: Partial<import('../services/settingsService').AppSettings>): Promise<import('../services/settingsService').AppSettings> =>
+    ipcRenderer.invoke(IPC_SAVE_SETTINGS, patch),
 });

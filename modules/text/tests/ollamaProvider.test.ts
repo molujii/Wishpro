@@ -20,9 +20,9 @@ describe('OllamaProvider', () => {
     expect(provider.name).toBe('ollama');
   });
 
-  it('polish() rejects with /not yet implemented/i', async () => {
-    const provider = new OllamaProvider();
-    await expect(provider.polish(request)).rejects.toThrow(/not yet implemented/i);
+  it('polish() rejects with a network error when Ollama is not running', async () => {
+    const provider = new OllamaProvider('http://127.0.0.1:19999', 'llama3');
+    await expect(provider.polish(request)).rejects.toThrow(/Cannot reach Ollama/i);
   });
 
   it('construction with custom baseUrl and model does not throw', () => {

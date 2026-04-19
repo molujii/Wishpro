@@ -19,10 +19,10 @@ describe('WhisperAdapter (scaffold)', () => {
     expect(new WhisperAdapter('/models/ggml-base.bin').name).toBe('whisper-cpp');
   });
 
-  it('throws an error when transcribe is called (not yet implemented)', async () => {
-    const adapter = new WhisperAdapter('/models/ggml-base.bin');
+  it('rejects when whisper executable is not found', async () => {
+    const adapter = new WhisperAdapter('/models/ggml-base.bin', '__nonexistent_whisper_exec__');
     await expect(adapter.transcribe({ audioFilePath: tmpWavPath })).rejects.toThrow(
-      /not yet implemented/i,
+      /Failed to spawn whisper process/i,
     );
   });
 

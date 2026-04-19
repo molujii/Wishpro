@@ -1,5 +1,20 @@
 export type AppMode = 'conversation' | 'coding' | 'custom';
 
+export type SpeechProviderSetting = 'mock' | 'whisper-cpp';
+export type TextProviderSetting   = 'mock' | 'ollama';
+export type EnhancementSetting    = 'light' | 'normal' | 'heavy';
+
+export type AppSettings = {
+  speechProvider:  SpeechProviderSetting;
+  speechModelPath: string;
+  speechExecPath:  string;
+  speechLanguage:  string;
+  textProvider:    TextProviderSetting;
+  textModel:       string;
+  textOllamaUrl:   string;
+  textEnhancement: EnhancementSetting;
+};
+
 export type UpdateStatusKind =
   | 'checking'
   | 'available'
@@ -48,7 +63,6 @@ export type AppStateSnapshot = {
 interface ElectronAPI {
   // --- Module 1 ---
   onHotkeyPressed:   (cb: () => void) => void;
-  getSettings:       () => Promise<Record<string, unknown>>;
   micStart:          () => void;
   micStop:           () => void;
   modeChange:        (mode: AppMode) => void;
@@ -70,6 +84,10 @@ interface ElectronAPI {
   checkForUpdate:  () => Promise<void>;
   installUpdate:   () => Promise<void>;
   onUpdateStatus:  (cb: (payload: UpdateStatusPayload) => void) => void;
+
+  // --- Module 6: settings ---
+  getSettings:  () => Promise<AppSettings>;
+  saveSettings: (patch: Partial<AppSettings>) => Promise<AppSettings>;
 }
 
 declare global {

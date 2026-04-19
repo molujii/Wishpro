@@ -1,0 +1,120 @@
+.settings-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow-y: auto;
+  max-height: 340px;
+  padding-right: 2px;
+}
+
+.settings-pane__loading {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.settings-section__title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-1);
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-field__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.settings-field__select,
+.settings-field__input {
+  width: 100%;
+  padding: 6px var(--space-2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  outline: none;
+  transition: border-color var(--duration-fast) ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.settings-field__select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(240,238,232,0.4)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
+}
+
+.settings-field__select:focus,
+.settings-field__input:focus {
+  border-color: var(--color-accent);
+}
+
+.settings-field__input::placeholder {
+  color: rgba(240, 238, 232, 0.2);
+}
+
+.settings-pane__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+.settings-pane__save {
+  width: 100%;
+  padding: var(--space-2) 0;
+  background: var(--color-accent);
+  color: #0e0e12;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration-fast) ease;
+}
+
+.settings-pane__save:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.settings-pane__save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-pane__hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.settings-pane__hint code {
+  color: var(--color-accent);
+  opacity: 0.8;
+}

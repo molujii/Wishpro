@@ -38,10 +38,13 @@ describe('Overlay', () => {
     expect(screen.getByText(/History coming in Module 2/i)).toBeInTheDocument();
   });
 
-  it('clicking Settings tab shows placeholder', () => {
+  it('clicking Settings tab shows settings pane', () => {
     renderOverlay();
     fireEvent.click(screen.getByRole('button', { name: 'Settings' }));
-    expect(screen.getByText(/Settings coming in Module 6/i)).toBeInTheDocument();
+    // Settings pane renders either the loading state or the loaded form
+    const hasLoading  = screen.queryByText(/Loading/i);
+    const hasProvider = screen.queryByText(/Speech Model/i);
+    expect(hasLoading ?? hasProvider).toBeInTheDocument();
   });
 
   it('mousedown on mic button calls electronAPI.micStart', () => {

@@ -17,3 +17,7 @@ export const IPC_LOG_EVENT          = 'backend:log-event'        as const;
 export const IPC_CHECK_FOR_UPDATE   = 'updater:check'            as const;
 export const IPC_INSTALL_UPDATE     = 'updater:install'          as const;
 export const IPC_UPDATE_STATUS      = 'updater:status'           as const;
+
+// Settings channels (Module 6)
+export const IPC_GET_SETTINGS       = 'settings:get'             as const;
+export const IPC_SAVE_SETTINGS      = 'settings:save'            as const;
