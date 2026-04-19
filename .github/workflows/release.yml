@@ -1,0 +1,44 @@
+name: Release
+
+# Triggered on version tags (e.g. v0.1.0) or manually via workflow_dispatch
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+# Required secrets (set in GitHub repo Settings → Secrets and Variables → Actions):
+#   APPLE_ID            – Apple developer ID email for notarization
+#   APPLE_TEAM_ID       – Apple team identifier
+#   APPLE_APP_PASSWORD  – App-specific password for notarization
+
+jobs:
+  release-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm test
+
+      - run: npm run build
+
+      - run: npm run make
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: whispro-mac
+          path: out/make/**/*.dmg
+          if-no-files-found: warn

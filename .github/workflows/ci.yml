@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-test:
+  lint-test-build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,3 +18,4 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+      - run: npm run build
